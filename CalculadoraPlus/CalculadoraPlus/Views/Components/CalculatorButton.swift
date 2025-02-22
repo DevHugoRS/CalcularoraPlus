@@ -18,8 +18,8 @@ extension CalculatorView {
             }
                 .buttonStyle(CalculatorButtonStyle(
                     size: getButtonStyle(),
-                    backgroundColor: buttonType.backgroundColor,
-                    foregroundColor: buttonType.foregroundColor,
+                    backgroundColor: getBackgroundColor(),
+                    foregroundColor: getForegroundColor(),
                     isWide: buttonType == .digit(.zero))
                 )
         }
@@ -31,6 +31,15 @@ extension CalculatorView {
             return (screenWidth - (spacingCount * Constants.padding)) / buttonCount
             
         }
+        
+        private func getBackgroundColor() -> Color {
+            return viewModel.buttonTypeIsHighlighted(buttonType: buttonType) ? buttonType.foregroundColor : buttonType.backgroundColor
+        }
+
+        private func getForegroundColor() -> Color {
+            return viewModel.buttonTypeIsHighlighted(buttonType: buttonType) ? buttonType.backgroundColor : buttonType.foregroundColor
+        }
+        
     }
 }
 
