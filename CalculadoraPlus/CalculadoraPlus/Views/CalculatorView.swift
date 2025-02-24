@@ -14,14 +14,13 @@ struct CalculatorView: View {
 //        MARK: - Body
     var body: some View {
         ZStack {
-            LinearGradient(colors: [.black, .black, .green], startPoint: .bottomTrailing, endPoint: .topLeading)
+            LinearGradient(colors: [.black, .black, .gray], startPoint: .topTrailing, endPoint: .bottomTrailing)
                 .ignoresSafeArea()
             
             VStack {
                 Spacer()
                 displayText
                 buttonPad
-                    .opacity(0.5)
             }
             .padding(Constants.padding)
         }
@@ -57,5 +56,6 @@ extension CalculatorView {
                     }
                 }
             }
+            .padding()
         }
     }

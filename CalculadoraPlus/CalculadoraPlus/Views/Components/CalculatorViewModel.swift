@@ -18,11 +18,14 @@ extension CalculatorView {
         }
         
         var buttonTypes: [[ButtonType]] {
-            [[.allClear, .negative, .percent, .operation(_operation: .division)],
-             [.digit(.seven), .digit(.eight), .digit(.nine), .operation(_operation: .multiplication)],
-             [.digit(.four), .digit(.five), .digit(.six), .operation(_operation: .subtraction)],
-             [.digit(.one), .digit(.two), .digit(.three), .operation(_operation: .addition)],
-             [.digit(.zero), .decimal, .equals]]
+            let _: ButtonType = calculator.showAllClear ? .allClear : .clear
+            return [
+                [.allClear, .negative, .percent, .operation(_operation: .division)],
+                [.digit(.seven), .digit(.eight), .digit(.nine), .operation(_operation: .multiplication)],
+                [.digit(.four), .digit(.five), .digit(.six), .operation(_operation: .subtraction)],
+                [.digit(.one), .digit(.two), .digit(.three), .operation(_operation: .addition)],
+                [.digit(.zero), .decimal, .equals]
+            ]
         }
         
 //        MARK: - Actions

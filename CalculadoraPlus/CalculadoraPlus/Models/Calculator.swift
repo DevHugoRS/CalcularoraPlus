@@ -28,7 +28,6 @@ struct Calculator {
         }
     }
     //    MARK: - Properties
-    
     private var newNumber: Decimal? {
         didSet {
             guard newNumber != nil else { return }
@@ -48,7 +47,6 @@ struct Calculator {
     private var pressedClear: Bool = false
     
 //    MARK: - Computed Properties
-    
     var displayText: String {
         return getNumberString(forNumber: number, withCommas: true)
     }
@@ -69,72 +67,78 @@ struct Calculator {
     }
     
     
-    // MARK: - COMPUTED PROPERTIES
+    // MARK: - Operations
 
     mutating func setDigit(_ digit: Digit) {
-        //1.
-        guard canAddDigit(digit) else { return }
-        //2.
-        let numberString = getNumberString(forNumber: newNumber)
-        //3.
-        newNumber = Decimal(string: numberString.appending("\(digit.rawValue)"))
-        
+        if containsDecimal && digit == .zero {
+            carryingZeroCount += 1
+        } else if canAddDigit(digit) {
+            let numberString = getNumberString(forNumber: newNumber)
+            newNumber = Decimal(string: numberString.appending("\(digit.rawValue)"))
+        }
     }
     
     mutating func setOperation(_ operation: ArithmeticOperation) {
-        //1.
         guard var number = newNumber ?? result else { return }
-        //2.
         if let existingExpression = expression {
             number = existingExpression.evaluate(with: number)
         }
-        //3.
         expression = ArithmeticExpression(number: number, operation: operation)
-        //4.
         newNumber = nil
-        
     }
     
     mutating func toggleSign() {
-        
-    }
-    
-    mutating func setPercent() {
-        // 1.
         if let number = newNumber {
-            // 2.
-            newNumber = number / 100
+            newNumber = -number
+            return
+        }
+        if let number = result {
+            result = -number
             return
         }
         
-        // 1.
+        carryingNegative.toggle()
+    }
+    
+    mutating func setPercent() {
+        if let number = newNumber {
+            newNumber = number / 100
+            return
+        }
         if let number = result {
-            // 2.
             result = number / 100
             return
         }
     }
     
     mutating func setDecimal() {
-        
+        if containsDecimal { return }
+        carryingDecimal = true
     }
     
     mutating func evaluate() {
-        // 1.
         guard let number = newNumber, let expressionToEvaluate = expression else { return }
-        // 2.
         result = expressionToEvaluate.evaluate(with: number)
-        // 3.
         expression = nil
         newNumber = nil
     }
     
     mutating func allClear() {
-        
+        newNumber = nil
+        expression = nil
+        result = nil
+        carryingNegative = false
+        carryingDecimal = false
+        carryingZeroCount = 0
     }
     
     mutating func clear() {
+        newNumber = nil
+        carryingNegative = false
+        carryingDecimal = false
+        carryingZeroCount = 0
         
+        pressedClear = true
     }
 //    MARK: - Helpers
     func operationIsHighlighted(_ operation: ArithmeticOperation) -> Bool {
@@ -142,7 +146,21 @@ struct Calculator {
     }
     
     private func getNumberString(forNumber number: Decimal?, withCommas: Bool = false) -> String {
-        return (withCommas ? number? .formatted(.number) : number.map(String.init)) ?? "0"
+        var numberString = (withCommas ? number?.formatted(.number) : number.map(String.init)) ?? "0"
+        
+        if carryingNegative {
+            numberString.insert("-", at: numberString.startIndex)
+        }
+        
+        if carryingDecimal {
+            numberString.insert(".", at: numberString.endIndex)
+        }
+        
+        if carryingZeroCount > 0 {
+            numberString.append(String(repeating: "0", count: carryingZeroCount))
+        }
+        
+        return numberString
     }
     
     private func canAddDigit(_ digit: Digit) -> Bool {

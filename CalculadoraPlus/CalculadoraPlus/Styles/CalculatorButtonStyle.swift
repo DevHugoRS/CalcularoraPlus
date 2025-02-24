@@ -23,14 +23,14 @@ struct CalculatorButtonStyle: ButtonStyle {
             .foregroundColor(foregroundColor)
             .overlay {
                 if configuration.isPressed {
-                    Color(white: 1.0, opacity: 0.2)
+                    Color(white: 1.0, opacity: 0.3)
                 }
             }
-            .cornerRadius(10)
-            .shadow(color:.green, radius: 2, x: 5, y: 5)
+            .cornerRadius(25)
+            .shadow(color:.black, radius: 2, x: 5, y: 5)
             .overlay(
-                RoundedRectangle(cornerRadius: 10) // Forma da borda
-                    .stroke(Color.white, lineWidth: 2) // Cor da borda
+                RoundedRectangle(cornerRadius: 25) // Forma da borda
+                    .stroke(Color.gray, lineWidth: 2) // Cor da borda
             )
     }
     

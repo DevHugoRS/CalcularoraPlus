@@ -42,15 +42,21 @@ enum ButtonType: Hashable, CustomStringConvertible {
     
     var backgroundColor: Color {
         switch self {
-        case .allClear, .clear, .negative, .percent, .operation, .equals, .digit, .decimal:
+        case .allClear, .clear, .negative, .percent:
             return .gray
+        case .digit(_), .decimal:
+            return .black
+        case .equals:
+            return .red
+        case .operation(_):
+            return .white
         }
     }
     
     var foregroundColor: Color {
         switch self {
-        case .allClear, .clear, .negative, .percent:
-            return .white
+        case .allClear, .clear, .negative, .percent, .operation(_operation: ):
+            return .black
         default:
             return .white
         }
